@@ -1,0 +1,13 @@
+
+target/
+dbt_packages/
+logs/
+
+# dbt profiles (contains credentials)
+profiles.yml
+
+
+# Local env file (contains credentials)
+.env
+.env.*
+!.env.example
