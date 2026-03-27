@@ -31,3 +31,7 @@ logs/
 
 # IDEs (optional local settings)
 .idea/
+.vscode/
+
+# Local user config
+aws_dbt_snowflake_project/.user.yml
