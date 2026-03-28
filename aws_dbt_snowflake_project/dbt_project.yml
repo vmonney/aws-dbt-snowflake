@@ -17,5 +17,6 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   aws_dbt_snowflake_project:
     bronze:
-      +materialized: table
+      +materialized: incremental
+      +incremental_strategy: append
       +schema: bronze
