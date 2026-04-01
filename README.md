@@ -1,13 +1,80 @@
-# aws-dbt-snowflake
+# AWS + dbt + Snowflake Analytics Engineering Portfolio Project
 
-## dbt CLI: load Snowflake credentials from `.env`
+This repository showcases an end-to-end analytics engineering workflow using **dbt on Snowflake**.
+The project models Airbnb-style booking data from raw sources to analytics-ready marts, with
+incremental loading, SCD2 snapshots, reusable macros, and data quality tests.
 
-This dbt project uses `env_var('SNOWFLAKE_ACCOUNT')` / `env_var('SNOWFLAKE_PASSWORD')` in `aws_dbt_snowflake_project/profiles.yml`.
+## Project Goal
 
-`dbt` does **not** automatically read `aws_dbt_snowflake_project/.env` in your regular terminal session. If you run `dbt` without exporting those variables, you'll get errors like:
-`Env var required but not provided: 'SNOWFLAKE_ACCOUNT'`.
+Build a production-style ELT project that demonstrates:
+- clear medallion-style modeling (`bronze` -> `silver` -> `gold`)
+- historical dimension tracking with dbt snapshots
+- trustworthy analytics outputs with built-in data tests
+- maintainable SQL transformation patterns with Jinja macros
 
-From the repo root (`aws-dbt-snowflake/`), run this once per new terminal session:
+## Tech Stack
+
+- **Warehouse:** Snowflake
+- **Transformation:** dbt Core
+- **Language:** SQL + Jinja
+- **Modeling pattern:** Bronze / Silver / Gold
+- **Quality checks:** dbt tests (`not_null`, `unique`, `relationships`, `accepted_values`)
+
+## Architecture Overview
+
+1. **Sources (`staging`)**
+   - Raw tables: `bookings`, `listings`, `hosts`
+2. **Bronze layer**
+   - Incremental ingestion from source tables
+3. **Silver layer**
+   - Type cleanup and business logic enrichment (pricing, tags, host normalization)
+4. **Gold layer**
+   - `dim_date` conformed calendar dimension
+   - SCD2 dimensions via snapshots (`dim_bookings`, `dim_listings`, `dim_hosts`)
+   - `facts` booking-grain fact table with historical joins
+   - `obt` one-big-table for analyst-friendly exploration
+
+## What Makes This Portfolio Project Strong
+
+- **Incremental patterns:** bronze and silver models use incremental materializations.
+- **Historical correctness:** facts join to SCD snapshot versions using booking creation timestamps.
+- **Business metrics included:** cancelled/completed booking counters and net booking value excluding cancellations.
+- **Reusable macro design:** custom macros for tagging and numeric calculations reduce repeated SQL.
+- **Data trust:** tests validate keys, dimensional relationships, and accepted status values.
+
+## Repository Structure
+
+```text
+aws-dbt-snowflake/
+  aws_dbt_snowflake_project/
+    models/
+      sources/
+      bronze/
+      silver/
+      gold/
+        ephemeral/
+    snapshots/
+    tests/
+    macros/
+    dbt_project.yml
+    profiles.yml
+```
+
+## Key Models
+
+- `models/gold/facts.sql`
+  - Core fact table at booking grain
+  - Adds cancellation logic and links to date/listing/host dimensions
+- `models/gold/dim_date.sql`
+  - Date dimension used for time intelligence in BI tools
+- `models/gold/obt.sql`
+  - Analyst-friendly denormalized table combining bookings, listings, and hosts
+- `snapshots/*.yml`
+  - SCD2 tracking for bookings, listings, and hosts using timestamp strategy
+
+## How to Run Locally
+
+From the repository root:
 
 ```zsh
 export DBT_PROFILES_DIR="$PWD/aws_dbt_snowflake_project"
@@ -16,42 +83,34 @@ source aws_dbt_snowflake_project/.env
 set +a
 ```
 
-Then you can run `dbt` normally, for example:
+Then execute:
 
 ```zsh
-dbt run --select models/demo
+dbt deps --project-dir aws_dbt_snowflake_project
+dbt run --project-dir aws_dbt_snowflake_project
+dbt test --project-dir aws_dbt_snowflake_project
+dbt snapshot --project-dir aws_dbt_snowflake_project
 ```
 
-Note: the `vscode-dbt-power-user` extension can load the `.env` automatically via its own environment handling, so you may not need these steps in Power User.
+Optional docs generation:
 
-## dbt hierarchy: where configs live
+```zsh
+dbt docs generate --project-dir aws_dbt_snowflake_project
+dbt docs serve --project-dir aws_dbt_snowflake_project
+```
 
-- `dbt_project.yml`: project-level configuration (including default model settings under the `models:` key).
-- `models/`: your model SQL files (declares dependencies via `ref()` / `source()`), plus any YAML alongside them (for docs, tests, and model-specific `config:` blocks).
-- Inline config in model SQL: `{{ config(...) }}` at the top of a `.sql` file when you need model-specific overrides.
+## Example Analytics Questions This Model Supports
 
-## Config precedence (what wins when settings conflict)
+- What is total gross booking value by city and month?
+- What share of bookings are cancelled over time?
+- How do host performance tags correlate with booking value?
+- How do listing attribute changes (captured via SCD snapshots) impact conversion and revenue?
 
-dbt will pick the most specific configuration. From highest to lowest specificity:
-1. Inline `{{ config(...) }}` in the model `.sql` file
-2. `config:` in `.yml` files (for example `schema.yml`)
-3. `dbt_project.yml` under the `models:` key (least specific)
+## Skills Demonstrated
 
-Within `dbt_project.yml`, the `models:` tree is hierarchical: deeper keys (more specific folders/models) override broader defaults. In `dbt_project.yml`, the `+` prefix marks “resource configs” that apply to that directory and inherit to subdirectories.
-
-In this repo, `dbt_project.yml` sets:
-- `models/demo/**` to `materialized: table` via `models: aws_dbt_snowflake_project: demo: +materialized: table`.
-
-Some configs are merged instead of clobbered (fully replaced). Common examples:
-- `tags` are additive (combined across levels)
-- `meta` and `freshness` are merged (specific values override less specific ones)
-- `pre-hook` / `post-hook` are additive
-
-## Best practices
-
-- Put defaults in `dbt_project.yml` (for example `+materialized`, `+tags`, and `+schema`) so most models share consistent conventions.
-- Use inline `{{ config(...) }}` only for true exceptions where a single model needs different behavior than the project defaults.
-- Use YAML (`schema.yml`) primarily for documentation and tests; use YAML `config:` sparingly for model-specific overrides.
-- Keep a clear “config source of truth”: avoid having multiple places set the same thing unless you deliberately rely on precedence.
-- Keep model SQL focused on transformations (`ref()` / `source()`, clean CTEs); treat configuration as metadata.
+- Dimensional modeling for analytics
+- SCD2 historical tracking in dbt
+- Incremental data pipeline design
+- Data quality and testing strategy
+- Maintainable SQL architecture for collaboration and scale
 
