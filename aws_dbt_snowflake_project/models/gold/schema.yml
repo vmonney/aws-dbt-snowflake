@@ -1,0 +1,57 @@
+version: 2
+
+models:
+  - name: dim_date
+    description: Conformed calendar dimension used by BI tools for time intelligence.
+    columns:
+      - name: date_key
+        description: Surrogate date key in YYYYMMDD format.
+        tests:
+          - not_null
+          - unique
+      - name: date_day
+        description: Calendar date.
+        tests:
+          - not_null
+          - unique
+
+  - name: facts
+    description: Booking-grain fact table for analyst reporting with historical SCD joins.
+    columns:
+      - name: BOOKING_ID
+        description: Natural key at the fact grain, one row per booking.
+        tests:
+          - not_null
+          - unique
+
+      - name: booking_created_date_key
+        description: Foreign key to dim_date for primary reporting date.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+
+      - name: listing_scd_id
+        description: Foreign key to dim_listings snapshot version valid at booking creation time.
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_listings')
+                field: dbt_scd_id
+
+      - name: host_scd_id
+        description: Foreign key to dim_hosts snapshot version valid at booking creation time.
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_hosts')
+                field: dbt_scd_id
+
+      - name: booking_status
+        description: Booking lifecycle status.
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['confirmed', 'cancelled', 'CONFIRMED', 'CANCELLED']
