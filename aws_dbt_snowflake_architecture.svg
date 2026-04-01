@@ -1,0 +1,147 @@
+<svg width="100%" viewBox="0 0 680 640" xmlns="http://www.w3.org/2000/svg" style="font-family: ui-sans-serif, system-ui, sans-serif; background: #ffffff;">
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <marker id="arrow-w" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#B4B2A9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!-- ── TITLE ── -->
+<text font-size="15" font-weight="500" fill="#2C2C2A" x="340" y="30" text-anchor="middle">AWS · dbt · Snowflake — analytics engineering pipeline</text>
+
+<!-- ══ ROW 0 — RAW SOURCES ══ -->
+<text font-size="12" fill="#888780" x="44" y="64" text-anchor="start">Sources</text>
+<g>
+  <rect x="100" y="72" width="120" height="44" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+  <text font-size="14" font-weight="500" fill="#444441" x="160" y="90" text-anchor="middle" dominant-baseline="central">bookings</text>
+  <text font-size="12" fill="#888780" x="160" y="108" text-anchor="middle" dominant-baseline="central">raw table</text>
+</g>
+<g>
+  <rect x="280" y="72" width="120" height="44" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+  <text font-size="14" font-weight="500" fill="#444441" x="340" y="90" text-anchor="middle" dominant-baseline="central">listings</text>
+  <text font-size="12" fill="#888780" x="340" y="108" text-anchor="middle" dominant-baseline="central">raw table</text>
+</g>
+<g>
+  <rect x="460" y="72" width="120" height="44" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+  <text font-size="14" font-weight="500" fill="#444441" x="520" y="90" text-anchor="middle" dominant-baseline="central">hosts</text>
+  <text font-size="12" fill="#888780" x="520" y="108" text-anchor="middle" dominant-baseline="central">raw table</text>
+</g>
+
+<!-- arrows row0 → bronze -->
+<line x1="160" y1="116" x2="160" y2="162" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arrow-w)"/>
+<line x1="340" y1="116" x2="340" y2="162" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arrow-w)"/>
+<line x1="520" y1="116" x2="520" y2="162" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arrow-w)"/>
+
+<!-- ══ ROW 1 — BRONZE ══ -->
+<text font-size="12" fill="#888780" x="44" y="158" text-anchor="start">Bronze</text>
+<g>
+  <rect x="100" y="166" width="120" height="50" rx="8" fill="#FAEEDA" stroke="#BA7517" stroke-width="0.5"/>
+  <text font-size="14" font-weight="500" fill="#633806" x="160" y="183" text-anchor="middle" dominant-baseline="central">stg_bookings</text>
+  <text font-size="12" fill="#854F0B" x="160" y="201" text-anchor="middle" dominant-baseline="central">incremental</text>
+</g>
+<g>
+  <rect x="280" y="166" width="120" height="50" rx="8" fill="#FAEEDA" stroke="#BA7517" stroke-width="0.5"/>
+  <text font-size="14" font-weight="500" fill="#633806" x="340" y="183" text-anchor="middle" dominant-baseline="central">stg_listings</text>
+  <text font-size="12" fill="#854F0B" x="340" y="201" text-anchor="middle" dominant-baseline="central">incremental</text>
+</g>
+<g>
+  <rect x="460" y="166" width="120" height="50" rx="8" fill="#FAEEDA" stroke="#BA7517" stroke-width="0.5"/>
+  <text font-size="14" font-weight="500" fill="#633806" x="520" y="183" text-anchor="middle" dominant-baseline="central">stg_hosts</text>
+  <text font-size="12" fill="#854F0B" x="520" y="201" text-anchor="middle" dominant-baseline="central">incremental</text>
+</g>
+
+<!-- arrows bronze → silver -->
+<line x1="160" y1="216" x2="160" y2="266" stroke="#BA7517" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="340" y1="216" x2="340" y2="266" stroke="#BA7517" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="520" y1="216" x2="520" y2="266" stroke="#BA7517" stroke-width="1" marker-end="url(#arrow)"/>
+
+<!-- ══ ROW 2 — SILVER ══ -->
+<text font-size="12" fill="#888780" x="44" y="262" text-anchor="start">Silver</text>
+<g>
+  <rect x="100" y="270" width="120" height="50" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+  <text font-size="14" font-weight="500" fill="#085041" x="160" y="287" text-anchor="middle" dominant-baseline="central">bookings_enr</text>
+  <text font-size="12" fill="#0F6E56" x="160" y="305" text-anchor="middle" dominant-baseline="central">type + logic</text>
+</g>
+<g>
+  <rect x="280" y="270" width="120" height="50" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+  <text font-size="14" font-weight="500" fill="#085041" x="340" y="287" text-anchor="middle" dominant-baseline="central">listings_enr</text>
+  <text font-size="12" fill="#0F6E56" x="340" y="305" text-anchor="middle" dominant-baseline="central">pricing · tags</text>
+</g>
+<g>
+  <rect x="460" y="270" width="120" height="50" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+  <text font-size="14" font-weight="500" fill="#085041" x="520" y="287" text-anchor="middle" dominant-baseline="central">hosts_enr</text>
+  <text font-size="12" fill="#0F6E56" x="520" y="305" text-anchor="middle" dominant-baseline="central">normalised</text>
+</g>
+
+<!-- macro badge -->
+<g>
+  <rect x="610" y="278" width="62" height="34" rx="6" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+  <text font-size="12" fill="#3C3489" x="641" y="291" text-anchor="middle" dominant-baseline="central">Jinja</text>
+  <text font-size="12" fill="#3C3489" x="641" y="305" text-anchor="middle" dominant-baseline="central">macros</text>
+</g>
+<line x1="610" y1="295" x2="582" y2="295" stroke="#534AB7" stroke-width="0.8" stroke-dasharray="3 2"/>
+
+<!-- arrows silver → dims -->
+<line x1="160" y1="320" x2="160" y2="370" stroke="#0F6E56" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="340" y1="320" x2="340" y2="370" stroke="#0F6E56" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="520" y1="320" x2="520" y2="370" stroke="#0F6E56" stroke-width="1" marker-end="url(#arrow)"/>
+
+<!-- ══ ROW 3 — DIMS ══ -->
+<text font-size="12" fill="#888780" x="44" y="366" text-anchor="start">Gold · dims</text>
+<g>
+  <rect x="100" y="374" width="120" height="50" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="0.5"/>
+  <text font-size="14" font-weight="500" fill="#4A1B0C" x="160" y="391" text-anchor="middle" dominant-baseline="central">dim_bookings</text>
+  <text font-size="12" fill="#993C1D" x="160" y="409" text-anchor="middle" dominant-baseline="central">SCD2 snapshot</text>
+</g>
+<g>
+  <rect x="280" y="374" width="120" height="50" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="0.5"/>
+  <text font-size="14" font-weight="500" fill="#4A1B0C" x="340" y="391" text-anchor="middle" dominant-baseline="central">dim_listings</text>
+  <text font-size="12" fill="#993C1D" x="340" y="409" text-anchor="middle" dominant-baseline="central">SCD2 snapshot</text>
+</g>
+<g>
+  <rect x="460" y="374" width="120" height="50" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="0.5"/>
+  <text font-size="14" font-weight="500" fill="#4A1B0C" x="520" y="391" text-anchor="middle" dominant-baseline="central">dim_hosts</text>
+  <text font-size="12" fill="#993C1D" x="520" y="409" text-anchor="middle" dominant-baseline="central">SCD2 snapshot</text>
+</g>
+<!-- dim_date -->
+<g>
+  <rect x="610" y="374" width="62" height="50" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+  <text font-size="14" font-weight="500" fill="#042C53" x="641" y="391" text-anchor="middle" dominant-baseline="central">dim_date</text>
+  <text font-size="12" fill="#185FA5" x="641" y="409" text-anchor="middle" dominant-baseline="central">calendar</text>
+</g>
+
+<!-- convergence arrows to facts -->
+<path d="M160 424 L160 484 L310 484" stroke="#185FA5" stroke-width="1" marker-end="url(#arrow)" fill="none"/>
+<path d="M340 424 L340 484" stroke="#185FA5" stroke-width="1" marker-end="url(#arrow)" fill="none"/>
+<path d="M520 424 L520 484 L372 484" stroke="#185FA5" stroke-width="1" marker-end="url(#arrow)" fill="none"/>
+<path d="M641 424 L641 484 L372 484" stroke="#185FA5" stroke-width="0.8" stroke-dasharray="3 2" marker-end="url(#arrow)" fill="none"/>
+
+<!-- ══ ROW 4 — FACTS + OBT ══ -->
+<text font-size="12" fill="#888780" x="44" y="480" text-anchor="start">Gold · facts</text>
+<g>
+  <rect x="220" y="490" width="160" height="50" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+  <text font-size="14" font-weight="500" fill="#042C53" x="300" y="507" text-anchor="middle" dominant-baseline="central">facts</text>
+  <text font-size="12" fill="#185FA5" x="300" y="525" text-anchor="middle" dominant-baseline="central">booking grain · SCD join</text>
+</g>
+<line x1="380" y1="515" x2="432" y2="515" stroke="#185FA5" stroke-width="1" marker-end="url(#arrow)"/>
+<g>
+  <rect x="434" y="490" width="90" height="50" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+  <text font-size="14" font-weight="500" fill="#042C53" x="479" y="507" text-anchor="middle" dominant-baseline="central">obt</text>
+  <text font-size="12" fill="#185FA5" x="479" y="525" text-anchor="middle" dominant-baseline="central">analyst view</text>
+</g>
+
+<!-- ══ ROW 5 — TESTS ══ -->
+<g>
+  <rect x="140" y="568" width="260" height="36" rx="8" fill="#EAF3DE" stroke="#3B6D11" stroke-width="0.5"/>
+  <text font-size="14" font-weight="500" fill="#173404" x="270" y="582" text-anchor="middle" dominant-baseline="central">dbt tests</text>
+  <text font-size="12" fill="#3B6D11" x="270" y="597" text-anchor="middle" dominant-baseline="central">not_null · unique · relationships · accepted_values</text>
+</g>
+<line x1="300" y1="540" x2="270" y2="566" stroke="#3B6D11" stroke-width="0.7" stroke-dasharray="3 2"/>
+
+<!-- Snowflake label -->
+<text font-size="12" fill="#888780" x="570" y="530" text-anchor="start">Snowflake</text>
+<text font-size="12" fill="#888780" x="570" y="544" text-anchor="start">warehouse</text>
+<rect x="562" y="490" width="3" height="60" rx="1" fill="#888780" opacity=".4"/>
+</svg>

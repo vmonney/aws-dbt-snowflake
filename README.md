@@ -23,10 +23,10 @@ Build a production-style ELT project that demonstrates:
 ## Architecture Overview
 
 <p align="center">
-  <img src="aws_dbt_snowflake_architecture.png" alt="AWS dbt Snowflake architecture" />
+  <img src="aws_dbt_snowflake_architecture.svg" alt="AWS dbt Snowflake architecture" />
 </p>
 
-[Open architecture diagram](./aws_dbt_snowflake_architecture.png)
+[Open architecture diagram](./aws_dbt_snowflake_architecture.svg)
 
 1. **Sources (`staging`)**
    - Raw tables: `bookings`, `listings`, `hosts`
